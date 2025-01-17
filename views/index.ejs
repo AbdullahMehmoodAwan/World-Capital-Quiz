@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,3 +49,162 @@
 </body>
 
 </html>
+-->
+
+
+
+
+
+
+
+
+// File: index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capital City Quiz</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body id="app">
+  <form class="container" id="quizForm">
+    <div class="horizontal-container">
+      <h3>
+        Total Score:
+        <span id="score">0</span>
+      </h3>
+    </div>
+
+    <h1 id="countryName">Country</h1>
+    <div class="answer-container">
+      <input type="text" name="answer" id="userInput" placeholder="Enter the capital" autofocus autocomplete="off">
+    </div>
+    <button type="submit">SUBMIT</button>
+    <div id="feedback"></div>
+  </form>
+
+  <script src="scripts/main.js"></script>
+</body>
+
+</html>
+
+// File: scripts/main.js
+const quiz = [
+  { country: "France", capital: "Paris" },
+  { country: "United Kingdom", capital: "London" },
+  { country: "United States of America", capital: "Washington" },
+];
+
+let totalScore = 0;
+let currentQuestion = {};
+
+function getRandomQuestion() {
+  return quiz[Math.floor(Math.random() * quiz.length)];
+}
+
+function updateQuestion() {
+  currentQuestion = getRandomQuestion();
+  document.getElementById("countryName").textContent = currentQuestion.country;
+}
+
+function updateScore() {
+  document.getElementById("score").textContent = totalScore;
+}
+
+function handleFeedback(isCorrect) {
+  const feedback = document.getElementById("feedback");
+  if (isCorrect) {
+    feedback.textContent = "Correct! ✔";
+    feedback.style.color = "green";
+  } else {
+    feedback.textContent = `Incorrect! The correct answer was ${currentQuestion.capital}. ✖`;
+    feedback.style.color = "red";
+  }
+
+  setTimeout(() => {
+    feedback.textContent = "";
+  }, 2000);
+}
+
+// Initialize first question
+updateQuestion();
+
+// Form submission handler
+const form = document.getElementById("quizForm");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const userInput = document.getElementById("userInput").value.trim();
+  if (!userInput) return;
+
+  const isCorrect = userInput.toLowerCase() === currentQuestion.capital.toLowerCase();
+  if (isCorrect) totalScore++;
+
+  updateScore();
+  handleFeedback(isCorrect);
+  updateQuestion();
+
+  document.getElementById("userInput").value = "";
+});
+
+// File: styles/main.css
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.horizontal-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  width: calc(100% - 22px);
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#feedback {
+  margin-top: 15px;
+  font-size: 16px;
+}
